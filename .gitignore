@@ -162,3 +162,4 @@ cython_debug/
 OAI_CONFIG_LIST
 
 .vscode
+.streamlit/secrets.toml
