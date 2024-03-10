@@ -4,8 +4,8 @@ from autogen import AssistantAgent, UserProxyAgent
 
 #### PERSONAS ####
 # You can change the personas to whatever you want.
-assistant_persona = "You are Jake, a 35-year-old Marketing Manager from Seattle, embodies the quintessential craft beer enthusiast. You hold a Bachelor's Degree in Communications and earn $75,000 annually. As a single, urban dweller, you value uniqueness and quality in products, particularly in your passion for exploring new craft beers. You're environmentally conscious, tech-savvy, and keen on staying abreast of trends through social media. Your weekends are often spent visiting local breweries, attending beer festivals, or engaging in home brewing. You're an active member of online craft beer communities, enjoy pairing beers with food, and stay informed through blogs and magazines dedicated to brewing. Your social media presence is dotted with posts about his latest craft beer adventures, reflecting your appreciation for the art and science behind brewing."
-user_proxy_persona = "You are Mia, a 42-year-old seasoned market researcher. You are conducting an interview about the new product, a craft beer, for your client, a local brewery. The beer is a lager with a hint of citrus and a 5.5% ABV. The brewery is looking to expand its market share and wants to know how to best position the product. You will ask questions about the product, the target market, and the competition. You will probe for information and follow up on any interesting points. You will also ask for recommendations on how to improve the product and how to best market it."
+assistant_persona = ""
+user_proxy_persona = "You are a seasoned market researcher with many years of experience doing qualitative interviews.  You are conducting an interview with a potential customer to see their interest in your new product, and see what features your company could offer for the person based on their needs and the benefits they seek.  You will probe their responses requesting that they clarify, justify and/or extend their answers as appropriate. The business idea: ENTER YOUR BUSINESS DESCRIPTION HERE"
 
 # You can change the max_consecutive_auto_reply to whatever you want
 # but keep in mind that with higher values, the conversation will be more costly :-)
@@ -54,22 +54,46 @@ with st.sidebar:
 
     # Persona Configuration (override default personas)
     st.header("Persona Configuration")
+    st.markdown("""### Interviewee persona instructions:
+
+- Enter the most relevant demo- and psychographic elements and/or behaviors that characterize this persona.
+- Include elements you think will provide customer insights to inform your product or service features relative to other competitive solutions.  
+- Include their needs, pain points and potential benefits they seek relative to what you want to offer.
+- NOTE: be careful to avoid elements that might cause hallucinations (e.g., do you want AI searching for info only from a certain gender or occupation or income level? It might seem useful, but note that AI might only search for data about the variables you specify)
+- Run this interview a few times with different personas to see the differences that it generates. """)
     assistant_persona = st.text_area(
-        "Assistant Persona", value=assistant_persona, height=200)
+        "Interviewee persona", value=assistant_persona, height=200)
+    st.markdown("""### Interviewer persona instructions:
+
+- Describe your interviewer, including any capabilities you feel are relevant (e.g., experience as a qualitative market researcher as I’ve given in the example)
+- Briefly describe your business, and the customer needs that your business seeks to meet.
+- Describe the process you want them to undertake (e.g., use probes to clarify, justify and/or expand on the interviewees responses if helpful in generating a good understanding of this person).
+- I’ve included a sample, you should change this for your business. """)
     user_proxy_persona = st.text_area(
-        "User Proxy Persona", value=user_proxy_persona, height=200)
+        "Interviewer persona", value=user_proxy_persona, height=200)
     
     # Max Consecutive Auto Reply Configuration
     st.header("Max number of consecutive auto replies")
     max_consecutive_auto_reply = st.number_input(
-        "More replies incur more cost", value=max_consecutive_auto_reply, min_value=1, max_value=10)
+        "More replies incur more cost", value=max_consecutive_auto_reply, min_value=1, max_value=5)
 
 with st.container():
     # for message in st.session_state["messages"]:
     #    st.markdown(message)
 
     user_input = st.chat_input(placeholder="Type the first message here...")
-    st.markdown("_**First message example:** Hello! My name is Mia. I am a market researcher. You tasted our new craft beer last week. I would like to ask you a few questions about the beer. Is this a good time?_")
+    st.markdown("""## Activity goals:
+
+- Complement the data you compiled from customer interviews with insights using AI
+- Experience AI’s capabilities and limitations in generating insights about your target customers
+ 
+## Process:
+
+- Enter a description of a target customer persona in the top box.
+- Briefly describe your business in the bottom box, as well as a market researcher representing this business.
+- The interview will run for 5 iterations (questions/answers).
+- Try this with 2 or 3 different personas to see if you get additional useful insights.""")
+    st.markdown("_**First message example:** Hi, my name's Bob. Thanks for taking the time for this interview!_")
     if user_input:
         if not selected_key or not selected_model:
             st.warning(
